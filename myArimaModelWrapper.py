@@ -48,8 +48,8 @@ class ArimaModelWrapper:
         seasonal_pdq = [(x[0], x[1], x[2], s) for x in list(itertools.product(p, d, q))]
         
         # We make a brute force approach here for simplicity and simply check 
-        # all the parameter variations. Whenever a model has a better mse value
-        # we take it as the next best guess.
+        # all the parameter variations. Whenever a model has a better value
+        # for the quality criterion we take it as the next best guess.
         warnings.filterwarnings("ignore") # specify to ignore warning messages
         for param in pdq:
             for param_seasonal in seasonal_pdq:
@@ -60,7 +60,7 @@ class ArimaModelWrapper:
                                                       enforce_stationarity=False,
                                                       enforce_invertibility=False)                
                 except:
-                    continue
+                    continue    # just try next parameter variation if this does not work
                 training_result = model.fit()
                 try:
                     current_fit = getattr(training_result, criterion)
